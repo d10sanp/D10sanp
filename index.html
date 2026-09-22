@@ -2407,11 +2407,17 @@
     </div>
   </footer>
 
-  <!-- ══════════════════════════════════════════
+<!-- ══════════════════════════════════════════
      JAVASCRIPT
 ══════════════════════════════════════════ -->
 <!-- ✅ Load EmailJS FIRST -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    // Initialize EmailJS immediately with your Public Key
+    if (typeof emailjs !== "undefined") {
+      emailjs.init("rnTrmOTY0qW2UVjOK");
+    }
+  </script>
 
   <script>
     /* ════════════════════════════════
@@ -2618,32 +2624,32 @@
       e.preventDefault();
 
       const btn = document.getElementById("formBtn");
-      btn.innerText = "Sending...";
+      if (!btn) return;
+
+      btn.innerText = "Sending... ⏳";
       btn.disabled = true;
 
       emailjs.sendForm(
-        "service_hma0mfl",   // 🔁 replace
-        "template_pyeslng",  // 🔁 replace
+        "service_hma0mfl",   
+        "template_pyeslng",  
         e.target
       )
-        .then(() => {
-          btn.innerText = "Message Sent ✅";
-          e.target.reset();
-          // Reset button to normal after 2 seconds
-          setTimeout(() => {
-            btn.innerText = "Send Message →";
-            btn.disabled = false;
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("EmailJS Error:", error);
-          btn.innerText = "Failed ❌";
-          // Reset button to normal after 2 seconds
-          setTimeout(() => {
-            btn.innerText = "Send Message →";
-            btn.disabled = false;
-          }, 2000);
-        });
+      .then(() => {
+        btn.innerText = "Message Sent ✅";
+        e.target.reset();
+        setTimeout(() => {
+          btn.innerText = "Send Message →";
+          btn.disabled = false;
+        }, 2000);
+      })
+      .catch((err) => {
+        console.error("EmailJS Form Error:", err);
+        btn.innerText = "Failed ❌";
+        btn.disabled = false;
+        setTimeout(() => {
+          btn.innerText = "Send Message →";
+        }, 2000);
+      });
     }
   </script>
 </body>
