@@ -1,3 +1,10 @@
+/* ==========================================================================
+   EmailJS Initialization (Must run early to avoid initialization errors)
+   ========================================================================== */
+if (typeof emailjs !== "undefined") {
+    emailjs.init("rnTrmOTY0qW2UVjOK");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /* ============================= */
@@ -144,12 +151,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* ============================= */
-/* EmailJS Contact Form PREMIUM */
-/* ============================= */
-if (typeof emailjs !== "undefined") {
-
-    emailjs.init("rnTrmOTY0qW2UVjOK");
-
+    /* EmailJS Contact Form PREMIUM */
+    /* ============================= */
     const form = document.getElementById("contact-form");
     const sendBtn = document.getElementById("sendBtn");
 
@@ -160,16 +163,23 @@ if (typeof emailjs !== "undefined") {
 
             startLoading();
 
-            emailjs.sendForm(
-                "service_hma0mfl",
-                "template_pyeslng",
-                form
-            ).then(() => {
-                showSuccess();
-                form.reset();
-            }).catch(() => {
+            // We make sure emailjs exists before attempting to send
+            if (typeof emailjs !== "undefined") {
+                emailjs.sendForm(
+                    "service_hma0mfl",
+                    "template_pyeslng",
+                    form
+                ).then(() => {
+                    showSuccess();
+                    form.reset();
+                }).catch((error) => {
+                    console.error("EmailJS Error details:", error);
+                    showError();
+                });
+            } else {
+                console.error("EmailJS SDK failed to load. Check your CDN script tag.");
                 showError();
-            });
+            }
         });
 
         /* --- Button States --- */
@@ -227,6 +237,5 @@ if (typeof emailjs !== "undefined") {
             setTimeout(() => msg.remove(), 4000);
         }
     }
-}
 
 });
